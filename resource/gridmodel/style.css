@@ -20,15 +20,17 @@ html {
   background-color: gray;
   border: 1px solid black;
 }
-
 .gridContainer {
   margin-top: 25px;
   margin-right: 40px;
   display: inline-grid;
-  grid-template-columns: repeat(16, 2fr);
-  grid-template-rows: repeat(16, 2fr);
+  grid-template-columns: repeat(40, 1fr);
+  grid-template-rows: repeat(20, 1fr);
   border: 5px solid black;
   border-radius: 5px;
-  height: 575px;
-  width: 575px;
+  height: 90vh;
+  width: 75vw;
+}
+.reset {
+  float: left;
 }
