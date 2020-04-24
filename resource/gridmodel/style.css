@@ -34,3 +34,11 @@ html {
 .reset {
   float: left;
 }
+.source {
+  background-color: rgb(43, 160, 39);
+  border: 1px solid black;
+}
+.destination {
+  background-color: rgb(231, 26, 26);
+  border: 1px solid black;
+}
