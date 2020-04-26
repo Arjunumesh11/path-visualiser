@@ -1,5 +1,6 @@
 const grid = document.querySelector(".gridContainer");
 const resetButton = document.querySelector(".reset");
+var isobstacle = Array(800).fill(false);
 var arr = [];
 var isdrawing = false;
 var isdest = false;
@@ -52,10 +53,15 @@ grid.addEventListener("mouseup", () => { isdrawing = false; })
 square.addEventListener("mouseover", function (event) {
     if (isdrawing) {
         event.target.classList.replace("square", "color");
-        arr.push(parseInt(event.target.classList[1].slice(4)))
-        console.log(arr)
-        console.log("dest " + destination);
-        console.log("source " + source);
+        let a = parseInt(event.target.classList[1].slice(4));
+        if (!isobstacle[a]) {
+            arr.push(a)
+            isobstacle[a] = true;
+            console.log(arr)
+            console.log("dest " + destination);
+            console.log("source " + source);
+        }
+
     }
 });
 
