@@ -1,55 +1,122 @@
+import { PriorityQueue } from '../components/priorityqueue.js'
 const grid = document.querySelector(".gridContainer");
 const resetButton = document.querySelector(".reset");
-var isobstacle = Array(800).fill(false);
+const submitButton = document.querySelector(".calculate");
+
 var arr = [];
+var isobstacle = Array(800).fill(false);
 var isdrawing = false;
 var isdest = false;
 var issource = false;
 var source, destination;
-createGrid = () => {
+
+const createGrid = () => {
     for (let i = 0; i < 800; i++) {
         const div = document.createElement("div");
+        // const text = document.createTextNode(i)
+        // div.appendChild(text);
         div.classList.add("square");
         div.classList.add("cell" + i);
         grid.appendChild(div);
     }
 };
-
-updateGrid = () => {
-    grid.innerHTML = "";
-    grid.style.setProperty(
-        "grid-template-columns",
-        `repeat(${userInput.value}, 2fr)`
-    );
-    grid.style.setProperty(
-        "grid-template-rows",
-        `repeat(${userInput.value}, 2fr)`
-    );
-    for (let i = 0; i < userInput.value * userInput.value; i++) {
-        const div = document.createElement("div");
-        div.classList.add("square");
-        grid.appendChild(div);
+class node {
+    constructor(adjacent) {
+        this.adjacent = adjacent;
+        this.isvisted = false;
+        this.isdiscoverd = false;
+        this.parent;
     }
-    console.log(userInput.value);
-};
+}
 
+function create_gridmap(obstacle, size, rows, columns) {
+
+    var Grid_map = [];
+    var connected_nodes = [];
+    for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < columns; j++) {
+            connected_nodes = [];
+            if ((i - 1) >= 0) {
+                if (!isobstacle[i * columns + j - columns])
+                    connected_nodes.push({ node: i * columns + j - columns, distance: 1 });
+            }
+            if ((i + 1) < rows) {
+                if (!isobstacle[i * columns + j + columns])
+                    connected_nodes.push({ node: i * columns + j + columns, distance: 1 });
+            } if ((j - 1) >= 0) {
+                if (!isobstacle[i * columns + j - 1])
+                    connected_nodes.push({ node: i * columns + j - 1, distance: 1 });
+            }
+            if ((j + 1) < columns) {
+                if (!isobstacle[i * columns + j + 1])
+                    connected_nodes.push({ node: i * columns + j + 1, distance: 1 });
+            }
+            Grid_map.push(new node(connected_nodes))
+        }
+    }
+    return Grid_map;
+}
+
+function dijkstra(graph, start, end, size) {
+    // console.log(start + " " + end);
+    var queue = new PriorityQueue(size);
+    var distance = [];
+    for (var i = 0; i < size; i++) {
+        distance.push(Infinity);
+    }
+    distance[start] = 0;
+    //console.log(graph[start]);
+    graph[start].isdiscoverd = true;
+    queue.enqueue(start, distance[start]);
+
+
+    while (!queue.isEmpty() && !graph[end].isvisted) {
+
+        var temp = queue.display();
+        // for (let k = 0; k < temp.length; k++)
+        //     console.log(temp[k].data);
+        // console.log("end")
+        let currentnode = queue.dequeue().data;
+        if (!graph[currentnode].isvisted) {
+            console.log(currentnode);
+            let adj = graph[currentnode].adjacent;
+            for (var j = 0; j < adj.length; j++) {
+                if (graph[adj[j].node].isvisted == false) {
+                    if (distance[adj[j].node] > (distance[currentnode] + adj[j].distance)) {
+                        distance[adj[j].node] = distance[currentnode] + adj[j].distance
+                        graph[adj[j].node].isdiscoverd == true;
+                        graph[adj[j].node].parent = currentnode;
+                        queue.enqueue(adj[j].node, distance[adj[j].node])
+                    }
+                }
+            }
+            graph[currentnode].isvisted = true;
+        }
+
+    }
+    return distance
+}
 const square = document.querySelector("div");
+
 grid.addEventListener("mousedown", (e) => {
-    if (!isdest) {
-        isdest = true;
-        event.target.classList.replace("square", "destination");
-        destination = parseInt(event.target.classList[1].slice(4));
-    }
-    else if (!issource) {
+
+    if (!issource) {
         event.target.classList.replace("square", "source");
         source = parseInt(event.target.classList[1].slice(4));
         issource = true;
+    }
+    else if (!isdest) {
+        isdest = true;
+        event.target.classList.replace("square", "destination");
+        destination = parseInt(event.target.classList[1].slice(4));
     }
     if (isdest && issource)
         isdrawing = true;
     e.preventDefault();
 })
+
 grid.addEventListener("mouseup", () => { isdrawing = false; })
+
 square.addEventListener("mouseover", function (event) {
     if (isdrawing) {
         event.target.classList.replace("square", "color");
@@ -60,6 +127,7 @@ square.addEventListener("mouseover", function (event) {
             console.log(arr)
             console.log("dest " + destination);
             console.log("source " + source);
+            console.log("df" + asd);
         }
 
     }
@@ -68,6 +136,7 @@ square.addEventListener("mouseover", function (event) {
 
 resetButton.addEventListener("click", function () {
     issource = false;
+    isobstacle.fill(false);
     isdest = false;
     source = null;
     destination = null;
@@ -77,5 +146,23 @@ resetButton.addEventListener("click", function () {
     arr = [];
     createGrid();
 });
-
+submitButton.addEventListener("click", function () {
+    if (issource && isdest) {
+        var Grid_map = create_gridmap(0, 800, 20, 40);
+        // console.log(Grid_map)
+        // console.log("source = " + source + "  destination = " + destination);
+        dijkstra(Grid_map, source, destination, 800);
+        let i = Grid_map[destination].parent;
+        console.log("done")
+        while (i != source) {
+            var x = document.getElementsByClassName("cell" + i);
+            i = Grid_map[i].parent;
+            console.log(i);
+            x[0].style.backgroundColor = "blue";
+        }
+    }
+    else {
+        alert("add source and destination")
+    }
+})
 createGrid();

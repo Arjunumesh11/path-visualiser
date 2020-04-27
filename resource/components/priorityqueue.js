@@ -1,4 +1,4 @@
-class PriorityQueue {
+export class PriorityQueue {
     constructor(maxSize) {
         // Set default max size if not provided
         if (isNaN(maxSize)) {
@@ -10,7 +10,7 @@ class PriorityQueue {
     }
     // Helper function to display all values while developing
     display() {
-        console.log(this.container);
+        return this.container;
     }
     // Checks if queue is empty
     isEmpty() {
@@ -66,5 +66,3 @@ class PriorityQueue {
     this.priority = priority;
 }
 };
-var k = 10;
-module.exports = PriorityQueue;
