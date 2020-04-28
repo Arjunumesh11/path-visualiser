@@ -1,7 +1,11 @@
-import { PriorityQueue } from '../components/priorityqueue.js'
+import { PriorityQueue } from './priorityqueue.js'
 const grid = document.querySelector(".gridContainer");
 const resetButton = document.querySelector(".reset");
 const submitButton = document.querySelector(".calculate");
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 var arr = [];
 var isobstacle = Array(800).fill(false);
@@ -57,7 +61,7 @@ function create_gridmap(obstacle, size, rows, columns) {
     return Grid_map;
 }
 
-function dijkstra(graph, start, end, size) {
+async function dijkstra(graph, start, end, size) {
     // console.log(start + " " + end);
     var queue = new PriorityQueue(size);
     var distance = [];
@@ -68,21 +72,35 @@ function dijkstra(graph, start, end, size) {
     //console.log(graph[start]);
     graph[start].isdiscoverd = true;
     queue.enqueue(start, distance[start]);
-
+    var color1 = 255;
+    var color2 = 255;
+    var flag = 0;
 
     while (!queue.isEmpty() && !graph[end].isvisted) {
-
+        await sleep(10);
+        if (flag % 10 == 0) {
+            if (color1 > 0)
+                color1 = color1 - 5;
+        }
+        if (flag % 20 == 0) {
+            if (color2 > 0)
+                color2 = color2 - 20;
+        }
+        flag++;
+        //console.log("col" + color)
         var temp = queue.display();
         // for (let k = 0; k < temp.length; k++)
         //     console.log(temp[k].data);
         // console.log("end")
         let currentnode = queue.dequeue().data;
         if (!graph[currentnode].isvisted) {
-            console.log(currentnode);
+            //  console.log(currentnode);
             let adj = graph[currentnode].adjacent;
             for (var j = 0; j < adj.length; j++) {
                 if (graph[adj[j].node].isvisted == false) {
                     if (distance[adj[j].node] > (distance[currentnode] + adj[j].distance)) {
+                        var x = document.getElementsByClassName("cell" + adj[j].node);
+                        x[0].style.backgroundColor = "rgb(0, " + color1.toString() + "," + color2.toString() + ")"
                         distance[adj[j].node] = distance[currentnode] + adj[j].distance
                         graph[adj[j].node].isdiscoverd == true;
                         graph[adj[j].node].parent = currentnode;
@@ -146,18 +164,18 @@ resetButton.addEventListener("click", function () {
     arr = [];
     createGrid();
 });
-submitButton.addEventListener("click", function () {
+submitButton.addEventListener("click", async function () {
     if (issource && isdest) {
         var Grid_map = create_gridmap(0, 800, 20, 40);
         // console.log(Grid_map)
         // console.log("source = " + source + "  destination = " + destination);
-        dijkstra(Grid_map, source, destination, 800);
+        await dijkstra(Grid_map, source, destination, 800);
         let i = Grid_map[destination].parent;
-        console.log("done")
+        //console.log("done")
         while (i != source) {
             var x = document.getElementsByClassName("cell" + i);
             i = Grid_map[i].parent;
-            console.log(i);
+            // console.log(i);
             x[0].style.backgroundColor = "blue";
         }
     }
