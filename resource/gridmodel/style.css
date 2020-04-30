@@ -17,15 +17,15 @@ html {
 }
 
 .color {
-  background-color: gray;
+  background-color: rgb(27, 27, 27);
   border: 1px solid black;
 }
 .gridContainer {
   margin-top: 25px;
   margin-right: 40px;
   display: inline-grid;
-  grid-template-columns: repeat(40, 1fr);
-  grid-template-rows: repeat(20, 1fr);
+  grid-template-columns: repeat(41, 1fr);
+  grid-template-rows: repeat(21, 1fr);
   border: 5px solid black;
   border-radius: 5px;
   height: 90vh;
@@ -41,4 +41,8 @@ html {
 .destination {
   background-color: rgb(231, 26, 26);
   border: 1px solid black;
+}
+.buttons {
+  display: flex;
+  vertical-align: middle;
 }
