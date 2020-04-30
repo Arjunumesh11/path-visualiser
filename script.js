@@ -1,4 +1,4 @@
-import { PriorityQueue } from '../components/priorityqueue.js'
+import { PriorityQueue } from './priorityqueue.js'
 const grid = document.querySelector(".gridContainer");
 const resetButton = document.querySelector(".reset");
 const submitButton = document.querySelector(".calculate");
@@ -77,7 +77,11 @@ async function dijkstra(graph, start, end, size) {
     var flag = 0;
 
     while (!queue.isEmpty() && !graph[end].isvisted) {
+<<<<<<< HEAD:resource/gridmodel/script.js
         await sleep(20);
+=======
+        await sleep(10);
+>>>>>>> 6c298661883714ac9daea2f306e8bc706897ff91:script.js
         if (flag % 10 == 0) {
             if (color1 > 0)
                 color1 = color1 - 5;
