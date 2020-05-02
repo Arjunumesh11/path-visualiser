@@ -1,24 +1,24 @@
 import { PriorityQueue } from './priorityqueue.js'
+import { createmaze } from './resource/gridmodel/maze.js'
 const grid = document.querySelector(".gridContainer");
 const resetButton = document.querySelector(".reset");
 const submitButton = document.querySelector(".calculate");
+const mazeButton = document.querySelector(".maze");
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 var arr = [];
-var isobstacle = Array(800).fill(false);
+export var isobstacle = Array(861).fill(false);
 var isdrawing = false;
 var isdest = false;
 var issource = false;
 var source, destination;
 
 const createGrid = () => {
-    for (let i = 0; i < 800; i++) {
+    for (let i = 0; i < 861; i++) {
         const div = document.createElement("div");
-        // const text = document.createTextNode(i)
-        // div.appendChild(text);
         div.classList.add("square");
         div.classList.add("cell" + i);
         grid.appendChild(div);
@@ -62,14 +62,12 @@ function create_gridmap(obstacle, size, rows, columns) {
 }
 
 async function dijkstra(graph, start, end, size) {
-    // console.log(start + " " + end);
     var queue = new PriorityQueue(size);
     var distance = [];
     for (var i = 0; i < size; i++) {
         distance.push(Infinity);
     }
     distance[start] = 0;
-    //console.log(graph[start]);
     graph[start].isdiscoverd = true;
     queue.enqueue(start, distance[start]);
     var color1 = 255;
@@ -77,28 +75,19 @@ async function dijkstra(graph, start, end, size) {
     var flag = 0;
 
     while (!queue.isEmpty() && !graph[end].isvisted) {
-<<<<<<< HEAD:resource/gridmodel/script.js
-        await sleep(20);
-=======
         await sleep(10);
->>>>>>> 6c298661883714ac9daea2f306e8bc706897ff91:script.js
         if (flag % 10 == 0) {
             if (color1 > 0)
-                color1 = color1 - 5;
+                color1 = color1 - 3;
         }
         if (flag % 20 == 0) {
             if (color2 > 0)
-                color2 = color2 - 20;
+                color2 = color2 - 1;
         }
         flag++;
-        //console.log("col" + color)
         var temp = queue.display();
-        // for (let k = 0; k < temp.length; k++)
-        //     console.log(temp[k].data);
-        // console.log("end")
         let currentnode = queue.dequeue().data;
         if (!graph[currentnode].isvisted) {
-            //  console.log(currentnode);
             let adj = graph[currentnode].adjacent;
             for (var j = 0; j < adj.length; j++) {
                 if (graph[adj[j].node].isvisted == false) {
@@ -146,10 +135,6 @@ square.addEventListener("mouseover", function (event) {
         if (!isobstacle[a]) {
             arr.push(a)
             isobstacle[a] = true;
-            console.log(arr)
-            console.log("dest " + destination);
-            console.log("source " + source);
-            console.log("df" + asd);
         }
 
     }
@@ -163,28 +148,37 @@ resetButton.addEventListener("click", function () {
     source = null;
     destination = null;
     grid.innerHTML = "";
-    grid.style.setProperty("grid-template-columns", `repeat(40, 1fr)`);
-    grid.style.setProperty("grid-template-rows", `repeat(20, 1fr)`);
+    grid.style.setProperty("grid-template-columns", `repeat(41, 1fr)`);
+    grid.style.setProperty("grid-template-rows", `repeat(21, 1fr)`);
     arr = [];
     createGrid();
-});
+})
 submitButton.addEventListener("click", async function () {
     if (issource && isdest) {
-        var Grid_map = create_gridmap(0, 800, 20, 40);
-        // console.log(Grid_map)
-        // console.log("source = " + source + "  destination = " + destination);
-        await dijkstra(Grid_map, source, destination, 800);
+        var Grid_map = create_gridmap(0, 861, 21, 41);
+        await dijkstra(Grid_map, source, destination, 861);
         let i = Grid_map[destination].parent;
-        //console.log("done")
         while (i != source) {
             var x = document.getElementsByClassName("cell" + i);
             i = Grid_map[i].parent;
-            // console.log(i);
-            x[0].style.backgroundColor = "blue";
+            x[0].style.backgroundColor = "orange";
         }
     }
     else {
         alert("add source and destination")
     }
+})
+mazeButton.addEventListener("click", function () {
+    issource = false;
+    isobstacle.fill(false);
+    isdest = false;
+    source = null;
+    destination = null;
+    grid.innerHTML = "";
+    grid.style.setProperty("grid-template-columns", `repeat(41, 1fr)`);
+    grid.style.setProperty("grid-template-rows", `repeat(21, 1fr)`);
+    arr = [];
+    createGrid();
+    createmaze(21, 41);
 })
 createGrid();
