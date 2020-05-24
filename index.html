@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" type="text/css" href="./style.css" />
-    <title>Etch-A-Sketch</title>
-  </head>
-  <body>
-    <div class="right" draggable="false">
-      <div class="gridContainer"></div>
-    </div>
-    <div class="page">
-      <div class="buttons">
-        <button class="reset">RESET</button>
-        <button class="calculate">SUBMIT</button>
-        <button class="maze">MAZE</button>
-      </div>
-    </div>
-    <script type="module" src="./script.js"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" type="text/css" href="./style.css" />
+  <title>Etch-A-Sketch</title>
+</head>
+
+<body>
+  <div class="right" draggable="false">
+    <div class="gridContainer"></div>
+  </div>
+  <div class="navbar">
+    <button class="reset">RESET</button>
+    <button class="maze">MAZE</button>
+    <button class="calculate">Submit</button>
+    <select id="algorithm" name="alglist" form="algoform">
+      <option value="Dijkstra">Dijkstra</option>
+      <option value="DFS">DFS</option>
+      <option value="BFS">BFS</option>
+    </select>
+  </div>
+  <script type="module" src="./script.js"></script>
+</body>
+
 </html>

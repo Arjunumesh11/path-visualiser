@@ -1,7 +1,4 @@
-html {
-  text-align: center;
-  font-family: Monaco;
-}
+
 
 .right {
   float: right;
@@ -20,8 +17,14 @@ html {
   background-color: rgb(27, 27, 27);
   border: 1px solid black;
 }
+.source{
+   background-color: rgb(7, 250, 59);
+}
+.destination{
+   background-color: rgb(250, 7, 68);
+}
 .gridContainer {
-  margin-top: 25px;
+  margin-top: 10px;
   margin-right: 40px;
   display: inline-grid;
   grid-template-columns: repeat(41, 1fr);
@@ -31,18 +34,18 @@ html {
   height: 90vh;
   width: 75vw;
 }
-.reset {
+.navbar {
+  overflow: hidden;
+}
+
+.navbar  {
   float: left;
+  font-size: 14px;
+  text-align: center;
+  text-decoration: none;
 }
-.source {
-  background-color: rgb(43, 160, 39);
-  border: 1px solid black;
-}
-.destination {
-  background-color: rgb(231, 26, 26);
-  border: 1px solid black;
-}
-.buttons {
-  display: flex;
-  vertical-align: middle;
-}
+
+
+
+
+
