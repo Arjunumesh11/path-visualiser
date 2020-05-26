@@ -160,6 +160,103 @@ async function dijkstra(graph, start, end, size) {
     }
     return distance;
 }
+async function leastdistance(graph, start, end, size) {
+    var queue = new PriorityQueue(size);
+    var distance = [];
+    var x_end = Math.floor(end / 41), y_end = end % 41;
+    var geomtry_dis;
+    for (var i = 0; i < size; i++) {
+        distance.push(Infinity);
+    }
+    distance[start] = 0;
+    graph[start].isdiscoverd = true;
+    queue.enqueue(start, distance[start]);
+    var color1 = 255;
+    var color2 = 255;
+    var flag = 0;
+
+    while (!queue.isEmpty() && !graph[end].isvisted) {
+        await sleep(10);
+        if (flag % 10 == 0) {
+            if (color1 > 0)
+                color1 = color1 - 3;
+        }
+        if (flag % 20 == 0) {
+            if (color2 > 0)
+                color2 = color2 - 1;
+        }
+        flag++;
+        var temp = queue.display();
+        let currentnode = queue.dequeue().data;
+        if (!graph[currentnode].isvisted) {
+            let adj = graph[currentnode].adjacent;
+            for (var j = 0; j < adj.length; j++) {
+                if (graph[adj[j].node].isvisted == false) {
+                    var x = document.getElementsByClassName("cell" + adj[j].node);
+                    x[0].style.backgroundColor = "rgb(0, " + color1.toString() + "," + color2.toString() + ")";
+                    graph[adj[j].node].isdiscoverd == true;
+                    graph[adj[j].node].parent = currentnode;
+                    geomtry_dis = Math.pow(x_end - adj[j].node / 41, 2) + Math.pow(y_end - adj[j].node % 41, 2);
+                    geomtry_dis = Math.ceil(Math.sqrt(geomtry_dis));
+                    queue.enqueue(adj[j].node, geomtry_dis);
+
+                }
+            }
+            graph[currentnode].isvisted = true;
+        }
+
+    }
+    return distance;
+}
+async function a_star(graph, start, end, size) {
+    var x_end = Math.floor(end / 41), y_end = end % 41;
+    var queue = new PriorityQueue(size);
+    var distance = [];
+    var geomtry_dis;
+    for (var i = 0; i < size; i++) {
+        distance.push(Infinity);
+    }
+    distance[start] = 0;
+    graph[start].isdiscoverd = true;
+    queue.enqueue(start, distance[start]);
+    var color1 = 255;
+    var color2 = 255;
+    var flag = 0;
+
+    while (!queue.isEmpty() && !graph[end].isvisted) {
+        await sleep(10);
+        if (flag % 10 == 0) {
+            if (color1 > 0)
+                color1 = color1 - 3;
+        }
+        if (flag % 20 == 0) {
+            if (color2 > 0)
+                color2 = color2 - 1;
+        }
+        flag++;
+        let currentnode = queue.dequeue().data;
+        if (!graph[currentnode].isvisted) {
+            let adj = graph[currentnode].adjacent;
+            for (var j = 0; j < adj.length; j++) {
+                if (graph[adj[j].node].isvisted == false) {
+                    if (distance[adj[j].node] > (distance[currentnode] + adj[j].distance)) {
+                        var x = document.getElementsByClassName("cell" + adj[j].node);
+                        x[0].style.backgroundColor = "rgb(0, " + color1.toString() + "," + color2.toString() + ")";
+                        distance[adj[j].node] = distance[currentnode] + adj[j].distance;
+                        graph[adj[j].node].isdiscoverd == true;
+                        graph[adj[j].node].parent = currentnode;
+                        geomtry_dis = Math.pow(x_end - adj[j].node / 41, 2) + Math.pow(y_end - adj[j].node % 41, 2);
+                        geomtry_dis = Math.ceil(Math.sqrt(geomtry_dis));
+                        queue.enqueue(adj[j].node, distance[adj[j].node] + geomtry_dis);
+                    }
+                }
+            }
+            graph[currentnode].isvisted = true;
+        }
+
+    }
+    return distance;
+}
 const square = document.querySelector("div");
 
 grid.addEventListener("mousedown", (e) => {
@@ -212,6 +309,10 @@ submitButton.addEventListener("click", async function () {
         Grid_map = create_gridmap(0, 861, 21, 41);
         if (sel.value == "Dijkstra")
             await dijkstra(Grid_map, source, destination, 861);
+        else if (sel.value == "Astar")
+            await a_star(Grid_map, source, destination, 861);
+        else if (sel.value == "leastdistance")
+            await leastdistance(Grid_map, source, destination, 861);
         else if (sel.value == "DFS")
             await DFS(source, destination, 0);
         else if (sel.value == "BFS")
